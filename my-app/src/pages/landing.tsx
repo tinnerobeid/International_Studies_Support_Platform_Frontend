@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Landing: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -54,10 +55,10 @@ const Landing: React.FC = () => {
                 <a href="#join">Apply</a>
               </li>
               <li className="nav-user">
-                <a href="/student-register" aria-label="Account">
+                <Link to="/login" aria-label="Account">
                   <i className="fa-solid fa-user" />
                   <span className="nav-user__label">Account</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>

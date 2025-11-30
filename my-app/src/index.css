@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* Landing page styles */
+.site-header {
+  /* Add your header styles here */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Add other missing styles */
