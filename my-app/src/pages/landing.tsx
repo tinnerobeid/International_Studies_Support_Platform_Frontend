@@ -43,10 +43,10 @@ const Landing: React.FC = () => {
                 <a href="#top">Home</a>
               </li>
               <li>
-                <a href="#services">Universities</a>
+                <Link to="/universities">Universities</Link>
               </li>
               <li>
-                <a href="#services">Scholarships</a>
+                <Link to="/scholarships">Scholarships</Link>
               </li>
               <li>
                 <a href="#services">Services</a>

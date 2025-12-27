@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Seoul National University",
+    "city": "Seoul",
+    "region": "Seoul",
+    "sector": "Public",
+    "institutionType": "University",
+    "level": "Both",
+    "website": "https://www.snu.ac.kr"
+  },
+  {
+    "name": "Yonsei University",
+    "city": "Seoul",
+    "region": "Seoul",
+    "sector": "Private",
+    "institutionType": "University",
+    "level": "Both",
+    "website": "https://www.yonsei.ac.kr"
+  },
+  {
+    "name": "Inha University",
+    "city": "Incheon",
+    "region": "Other",
+    "sector": "Private",
+    "institutionType": "University",
+    "level": "Both",
+    "website": "https://www.inha.ac.kr"
+  },
+  {
+    "name": "Korea University Sejong Campus",
+    "city": "Sejong",
+    "region": "Other",
+    "sector": "Private",
+    "institutionType": "University",
+    "level": "Both"
+  },
+  {
+    "name": "Jeju National University",
+    "city": "Jeju",
+    "region": "Jeju",
+    "sector": "Public",
+    "institutionType": "University",
+    "level": "Both",
+    "website": "https://www.jejunu.ac.kr"
+  },
+
+  {
+    "name": "Dongeui Science University",
+    "city": "Busan",
+    "region": "Busan",
+    "sector": "Private",
+    "institutionType": "Junior College",
+    "level": "Undergraduate"
+  },
+  {
+    "name": "Osan University",
+    "city": "Osan",
+    "region": "Gyeonggi",
+    "sector": "Private",
+    "institutionType": "Junior College",
+    "level": "Undergraduate"
+  },
+
+  {
+    "name": "Example Cyber University",
+    "city": "Seoul",
+    "region": "Seoul",
+    "sector": "Private",
+    "institutionType": "Cyber University",
+    "level": "Undergraduate"
+  },
+
+  {
+    "name": "Example Graduate School of Policy",
+    "city": "Seoul",
+    "region": "Seoul",
+    "sector": "Private",
+    "institutionType": "Graduate School",
+    "level": "Postgraduate"
+  }
+]
