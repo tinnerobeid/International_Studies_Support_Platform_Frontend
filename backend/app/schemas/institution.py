@@ -1,4 +1,4 @@
-from typing import List, Optional, Literal
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,8 +10,8 @@ class InstitutionOut(BaseModel):
     city: Optional[str] = None
     region: Optional[str] = None
 
-    institution_type: Optional[Literal["Public", "Private"]] = None
-    level: Optional[Literal["Undergraduate", "Graduate", "Both"]] = None
+    institution_type: Optional[str] = None
+    level: Optional[str] = None
 
     sector: Optional[str] = None
     website: Optional[str] = None

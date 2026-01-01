@@ -1,3 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional global polish */
+html,
+body {
+  background-color: #020617; /* slate-950 */
+  color: white;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
 
 :root {
   --bg: #0b0f14;
@@ -276,6 +289,8 @@ body {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-items: stretch;
 }
 
 .card {
@@ -284,6 +299,92 @@ body {
   border-radius: 16px;
   padding: 22px 20px;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .02) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px; /* ensures uniform card height for 3x3 grid */
+}
+
+/* Institution card specific styles to mirror provided design */
+.institution-card {
+  padding: 0; /* we handle padding inside body */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.institution-card .card-media {
+  position: relative;
+}
+
+.institution-cover {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.institution-logo-wrap {
+  position: absolute;
+  left: 16px;
+  bottom: -22px; /* overlap the image */
+  width: 72px;
+  height: 72px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.institution-logo-wrap .institution-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.badge-featured {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.favorite-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: rgba(0,0,0,0.45);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card-body {
+  padding: 28px 20px 18px 20px;
+}
+
+.institution-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 12px 0 8px;
+  color: #fff;
+}
+
+.institution-meta {
+  color: #bfc5cc;
+  margin: 0;
 }
 
 .card h3 {
@@ -297,7 +398,13 @@ body {
   color: #cfd3dc;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
   .cards-grid {
     grid-template-columns: 1fr;
   }

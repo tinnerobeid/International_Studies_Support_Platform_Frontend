@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Institution } from '../types/institution';
+import type { Institution } from '../types/institution';
 import InstitutionCard from './InstitutionCard';
+import { fetchInstitutions } from '../lib/api';
 
 const InstitutionList: React.FC = () => {
     const [institutions, setInstitutions] = useState<Institution[]>([]);
@@ -8,14 +9,10 @@ const InstitutionList: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchInstitutions = async () => {
+        const load = async () => {
             try {
-                const response = await fetch('/api/institutions');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch institutions');
-                }
-                const data = await response.json();
-                setInstitutions(data);
+                const res = await fetchInstitutions({ page_size: 9 });
+                setInstitutions(res.results ?? []);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An unknown error occurred');
             } finally {
@@ -23,7 +20,7 @@ const InstitutionList: React.FC = () => {
             }
         };
 
-        fetchInstitutions();
+        load();
     }, []);
 
     if (loading) {
