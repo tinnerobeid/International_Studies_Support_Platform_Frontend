@@ -1,9 +1,16 @@
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import app
+backend_dir = Path(__file__).parent.parent
+sys.path.insert(0, str(backend_dir))
+
 import pandas as pd
 from sqlalchemy.orm import Session
 from app.core.db import SessionLocal
 from app.models.institution import Institution
 
-XLSX_PATH = "seed/moe_universities.xlsx"
+XLSX_PATH = Path(__file__).parent / "moe_universities.xlsx"
 
 # Korean → English REGION mapping (your existing one)
 REGION_MAP = {

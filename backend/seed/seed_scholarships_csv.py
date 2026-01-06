@@ -1,7 +1,12 @@
-import csv
+import sys
 from pathlib import Path
 
-from app.db.session import SessionLocal
+# Add parent directory to path so we can import app
+backend_dir = Path(__file__).parent.parent
+sys.path.insert(0, str(backend_dir))
+
+import csv
+from app.core.db import SessionLocal
 from app.models.scholarship import Scholarship
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -40,10 +45,16 @@ def run():
 
   with CSV_PATH.open("r", encoding="utf-8-sig", newline="") as f:
     reader = csv.DictReader(f)
+    
+    row_count = 0
+    skipped = 0
 
     for row in reader:
+      row_count += 1
       name = norm(row.get("name") or row.get("scholarship_name"))
       if not name:
+        skipped += 1
+        print(f"⚠️ Skipping row {row_count}: missing name")
         continue
 
       # Find existing by name (or you can use id column if your csv has it)
@@ -71,10 +82,16 @@ def run():
         inserted += 1
 
   db.commit()
+  
+  # Verify total count
+  total_in_db = db.query(Scholarship).count()
   db.close()
 
   print(f"✅ Seeded scholarships from CSV: inserted={inserted}, updated={updated}")
+  print(f"📊 Total scholarships in database: {total_in_db}")
   print(f"📄 Source: {CSV_PATH}")
+  if skipped > 0:
+    print(f"⚠️ Skipped {skipped} rows due to missing data")
 
 
 if __name__ == "__main__":

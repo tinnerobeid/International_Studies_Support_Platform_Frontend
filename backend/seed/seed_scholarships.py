@@ -1,6 +1,11 @@
-import csv
+import sys
 from pathlib import Path
 
+# Add parent directory to path so we can import app
+backend_dir = Path(__file__).parent.parent
+sys.path.insert(0, str(backend_dir))
+
+import csv
 from app.core.db import SessionLocal
 from app.models.scholarship import Scholarship
 

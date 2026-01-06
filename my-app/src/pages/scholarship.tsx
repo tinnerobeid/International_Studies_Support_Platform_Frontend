@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchScholarships, Scholarship } from "../lib/api";
+import { fetchScholarships, type Scholarship } from "../lib/api";
+import "./scholarship.css";
 
 function formatKRW(n?: number | null) {
   if (!n) return "—";
@@ -29,6 +30,8 @@ export default function Scholarships() {
 
   const [saved, setSaved] = useState<Record<number, boolean>>({});
 
+  const skeletonItems = useMemo(() => Array.from({ length: pageSize }, (_, i) => i), [pageSize]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -50,9 +53,18 @@ export default function Scholarships() {
 
         if (!cancelled) {
           setData({ total: res.total, results: res.results });
+          // Debug: log API response
+          console.log(`Scholarships API response: total=${res.total}, results=${res.results.length}`);
+          if (res.total === 0) {
+            console.warn("API returned 0 scholarships. Check if database has data.");
+          }
         }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message ?? "Failed to load scholarships");
+      } catch (e) {
+        if (!cancelled) {
+          const message =
+            e instanceof Error ? e.message : "Failed to load scholarships";
+          setError(message);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -70,244 +82,301 @@ export default function Scholarships() {
   const providers = useMemo(() => ["All", "Government", "University", "Foundation"], []);
   const coverages = useMemo(() => ["All", "Full", "Tuition", "Stipend", "Partial"], []);
   const levels = useMemo(() => ["All", "Undergraduate", "Graduate", "Both"], []);
-  const eligibilities = useMemo(() => ["All", "International", "Korean", "Need-based", "Merit-based"], []);
+  // const eligibilities = useMemo(() => ["All", "International", "Korean", "Need-based", "Merit-based"], []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              Scholarships
-            </h1>
-            <p className="text-slate-300 mt-2">
-              Browse scholarships, filter by level and coverage, and save your shortlist.
-            </p>
-          </div>
+    <div className="u-page">
+      {/* Topbar (match Universities layout) */}
+      <div className="u-topbar">
+        <div className="u-brand">K-Study</div>
+        <div className="u-navlinks">
+          <a href="/">Discover</a>
+          <a href="/universities">Universities</a>
+          <a href="/scholarships">Scholarships</a>
+          <a href="#">Applying</a>
+        </div>
+      </div>
 
-          <div className="text-sm text-slate-400">
-            Results:{" "}
-            <span className="text-white font-semibold">{data.total}</span>
+      {/* Hero */}
+      <div className="u-hero">
+        <div className="u-hero-inner">
+          <h1 className="u-hero-title">Search</h1>
+          <p className="u-hero-subtitle">Scholarships and funding</p>
+
+          <div className="u-searchwrap">
+            <input
+              className="u-searchinput"
+              value={q}
+              onChange={(e) => {
+                setPage(1);
+                setQ(e.target.value);
+              }}
+              placeholder="Search for scholarships"
+            />
+            <button className="u-searchbtn" onClick={() => setPage(1)}>
+              Search
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Filter bar */}
-        <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
-            <div className="md:col-span-4">
-              <label className="text-xs text-slate-400">Search</label>
-              <input
-                value={q}
-                onChange={(e) => {
-                  setPage(1);
-                  setQ(e.target.value);
-                }}
-                placeholder="Search scholarships..."
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="text-xs text-slate-400">Provider</label>
-              <select
-                value={provider}
-                onChange={(e) => {
-                  setPage(1);
-                  setProvider(e.target.value);
-                }}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                {providers.map((p) => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="text-xs text-slate-400">Level</label>
-              <select
-                value={level}
-                onChange={(e) => {
-                  setPage(1);
-                  setLevel(e.target.value);
-                }}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                {levels.map((l) => (
-                  <option key={l} value={l}>{l}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="text-xs text-slate-400">Coverage</label>
-              <select
-                value={coverage}
-                onChange={(e) => {
-                  setPage(1);
-                  setCoverage(e.target.value);
-                }}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                {coverages.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="md:col-span-1">
-              <label className="text-xs text-slate-400">Sort</label>
-              <select
-                value={sort}
-                onChange={(e) => {
-                  setPage(1);
-                  setSort(e.target.value as SortKey);
-                }}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                <option value="popular">Popular</option>
-                <option value="az">A–Z</option>
-                <option value="stipendHigh">Stipend ↑</option>
-                <option value="deadline">Deadline</option>
-              </select>
-            </div>
+      {/* Results bar */}
+      <div className="u-resultsbar">
+        <div className="u-results-inner">
+          <div className="u-results-left">
+            <span>
+              Results: <b>{data.total}</b>
+            </span>
+            <span>
+              Page <b>{page}</b> of <b>{totalPages}</b>
+            </span>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <button
-              className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm hover:bg-slate-900"
-              onClick={() => {
-                setQ("");
-                setProvider("All");
-                setLevel("All");
-                setCoverage("All");
-                setEligibility("All");
-                setSort("popular");
+          <div className="u-pill">
+            <span style={{ opacity: 0.8 }}>Sort:</span>
+            <select
+              value={sort}
+              onChange={(e) => {
                 setPage(1);
+                setSort(e.target.value as SortKey);
               }}
             >
-              Reset
+              <option value="popular">Popular</option>
+              <option value="az">A–Z</option>
+              <option value="stipendHigh">Stipend ↑</option>
+              <option value="deadline">Deadline</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Filters chips */}
+      <div className="u-filtersbar">
+        <div className="u-filters-inner">
+          <div className="u-chip">
+            <label>Provider</label>
+            <select
+              value={provider}
+              onChange={(e) => {
+                setPage(1);
+                setProvider(e.target.value);
+              }}
+            >
+              {providers.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="u-chip">
+            <label>Level</label>
+            <select
+              value={level}
+              onChange={(e) => {
+                setPage(1);
+                setLevel(e.target.value);
+              }}
+            >
+              {levels.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="u-chip">
+            <label>Coverage</label>
+            <select
+              value={coverage}
+              onChange={(e) => {
+                setPage(1);
+                setCoverage(e.target.value);
+              }}
+            >
+              {coverages.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            className="u-chip"
+            onClick={() => {
+              setQ("");
+              setProvider("All");
+              setLevel("All");
+              setCoverage("All");
+              setEligibility("All");
+              setSort("popular");
+              setPage(1);
+            }}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="u-content">
+        <div className="u-content-inner">
+          {loading && <div className="text-white/80">Loading scholarships...</div>}
+          {error && <div className="text-red-300">{error}</div>}
+
+          <section className="cards">
+            <div className="container cards-grid">
+              {loading &&
+                !error &&
+                skeletonItems.map((i) => (
+                  <article key={`skeleton-${i}`} className="card">
+                    <div style={{ padding: "20px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ height: "20px", width: "75%", background: "rgba(255,255,255,0.1)", borderRadius: "4px", marginBottom: "8px" }}></div>
+                          <div style={{ height: "16px", width: "50%", background: "rgba(255,255,255,0.08)", borderRadius: "4px" }}></div>
+                        </div>
+                        <div style={{ height: "24px", width: "24px", background: "rgba(255,255,255,0.1)", borderRadius: "4px" }}></div>
+                      </div>
+                      <div style={{ height: "60px", background: "rgba(255,255,255,0.05)", borderRadius: "8px", marginBottom: "12px" }}></div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                        <div style={{ height: "50px", background: "rgba(255,255,255,0.05)", borderRadius: "8px" }}></div>
+                        <div style={{ height: "50px", background: "rgba(255,255,255,0.05)", borderRadius: "8px" }}></div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+
+              {!loading &&
+                !error &&
+                data.results.map((s) => {
+                  const isSaved = !!saved[s.id];
+
+                  return (
+                    <article key={s.id} className="card">
+                      <div className="card-body" style={{ padding: "20px", display: "flex", flexDirection: "column", height: "100%" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                          <div style={{ flex: 1 }}>
+                            <h3 className="institution-title" style={{ marginBottom: "6px" }}>{s.name}</h3>
+                            <p className="institution-meta">
+                              {s.provider ?? "—"} • {s.level ?? "—"}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSaved((prev) => ({ ...prev, [s.id]: !prev[s.id] }))
+                            }
+                            style={{
+                              background: "transparent",
+                              border: "1px solid rgba(255,255,255,0.2)",
+                              borderRadius: "8px",
+                              padding: "6px 10px",
+                              cursor: "pointer",
+                              color: "#fff",
+                              fontSize: "18px"
+                            }}
+                          >
+                            {isSaved ? "⭐" : "☆"}
+                          </button>
+                        </div>
+
+                        {(s.provider_type || s.eligibility) && (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "12px" }}>
+                            {s.provider_type && (
+                              <span style={{
+                                fontSize: "11px",
+                                padding: "4px 8px",
+                                background: "rgba(255,255,255,0.1)",
+                                borderRadius: "6px",
+                                border: "1px solid rgba(255,255,255,0.15)"
+                              }}>
+                                {s.provider_type}
+                              </span>
+                            )}
+                            {s.eligibility && (
+                              <span style={{
+                                fontSize: "11px",
+                                padding: "4px 8px",
+                                background: "rgba(59, 130, 246, 0.2)",
+                                borderRadius: "6px",
+                                border: "1px solid rgba(59, 130, 246, 0.4)"
+                              }}>
+                                {s.eligibility}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="u-tuition" style={{ marginBottom: "12px" }}>
+                          <span>Coverage</span>
+                          <strong>{s.coverage ?? "—"}</strong>
+                        </div>
+
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+                          <div className="u-tuition">
+                            <span>Monthly Stipend</span>
+                            <strong>{formatKRW(s.stipend)}</strong>
+                          </div>
+                          <div className="u-tuition">
+                            <span>Deadline</span>
+                            <strong>{s.deadline ?? "—"}</strong>
+                          </div>
+                        </div>
+
+                        <div className="u-actions" style={{ marginTop: "auto" }}>
+                          <button
+                            onClick={() => alert(`Open details for: ${s.name}`)}
+                          >
+                            View
+                          </button>
+                          {s.link && (
+                            <a
+                              href={s.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Link
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+            </div>
+          </section>
+
+          {!loading && !error && data.results.length === 0 && (
+            <div className="u-empty">No scholarships match your filters.</div>
+          )}
+
+          {/* Pagination */}
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <button
+              className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm hover:bg-black/40 disabled:opacity-40"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              Prev
             </button>
 
-            <div className="text-xs text-slate-400">
-              Page <span className="text-white">{page}</span> / {totalPages}
-            </div>
+            <span className="text-sm text-white/80">
+              Page <b className="text-white">{page}</b> of{" "}
+              <b className="text-white">{totalPages}</b>
+            </span>
+
+            <button
+              className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm hover:bg-black/40 disabled:opacity-40"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Next
+            </button>
           </div>
-        </div>
-
-        {/* Status */}
-        {loading && <div className="mt-6 text-slate-300">Loading scholarships...</div>}
-        {error && <div className="mt-6 text-red-300">{error}</div>}
-
-        {/* Cards */}
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {!loading &&
-            !error &&
-            data.results.map((s) => {
-              const isSaved = !!saved[s.id];
-
-              return (
-                <article
-                  key={s.id}
-                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5 hover:border-slate-700 transition"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h2 className="font-bold leading-snug">{s.name}</h2>
-                      <p className="text-sm text-slate-300 mt-1">
-                        {s.provider ?? "—"} • {s.level ?? "—"}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSaved((prev) => ({ ...prev, [s.id]: !prev[s.id] }))
-                      }
-                      className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm hover:bg-slate-900"
-                    >
-                      {isSaved ? "⭐" : "☆"}
-                    </button>
-                  </div>
-
-                  <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
-                    <p className="text-xs text-slate-400">Coverage</p>
-                    <p className="text-sm font-semibold">{s.coverage ?? "—"}</p>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
-                      <p className="text-xs text-slate-400">Monthly Stipend</p>
-                      <p className="text-sm font-semibold">{formatKRW(s.stipend)}</p>
-                    </div>
-                    <div className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
-                      <p className="text-xs text-slate-400">Deadline</p>
-                      <p className="text-sm font-semibold">{s.deadline ?? "—"}</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between gap-2">
-                    <button
-                      className="rounded-xl bg-white text-slate-900 px-3 py-2 text-sm font-semibold hover:opacity-90"
-                      onClick={() => alert(`Open details for: ${s.name}`)}
-                    >
-                      View
-                    </button>
-
-                    <button
-                      className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm hover:bg-slate-900"
-                      onClick={() => alert(`Start application for: ${s.name}`)}
-                    >
-                      Apply
-                    </button>
-
-                    {s.link ? (
-                      <a
-                        className="text-sm text-slate-300 hover:text-white hover:underline"
-                        href={s.link}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Link
-                      </a>
-                    ) : (
-                      <span className="text-sm text-slate-500">Link</span>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-        </div>
-
-        {!loading && !error && data.results.length === 0 && (
-          <div className="mt-10 text-center text-slate-400">
-            No scholarships match your search/filters.
-          </div>
-        )}
-
-        {/* Pagination */}
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <button
-            className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm hover:bg-slate-900 disabled:opacity-40"
-            disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            Prev
-          </button>
-
-          <span className="text-sm text-slate-300">
-            Page <span className="text-white font-semibold">{page}</span> of{" "}
-            <span className="text-white font-semibold">{totalPages}</span>
-          </span>
-
-          <button
-            className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm hover:bg-slate-900 disabled:opacity-40"
-            disabled={page >= totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          >
-            Next
-          </button>
         </div>
       </div>
     </div>

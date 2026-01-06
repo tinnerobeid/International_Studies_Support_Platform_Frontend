@@ -35,7 +35,7 @@ const InstitutionCard: React.FC<InstitutionCardProps> = ({ institution }) => {
             <div className="card-body">
                 <h3 className="institution-title">{institution.name}</h3>
                 <p className="institution-meta">
-                    {institution.city}, {institution.region}
+                    {institution.city || "—"}, {institution.region || "—"}
                 </p>
             </div>
         </article>

@@ -67,9 +67,19 @@ export default function Universities() {
           page_size: pageSize,
         });
 
-        if (!cancelled) setData({ total: res.total, results: res.results });
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message ?? "Failed to load universities");
+        if (!cancelled) {
+          setData({ total: res.total, results: res.results });
+          // Debug: log if we got results
+          if (res.total === 0) {
+            console.warn("API returned 0 universities. Check if database is seeded.");
+          }
+        }
+      } catch (e: unknown) {
+        if (!cancelled) {
+          const message = e instanceof Error ? e.message : "Failed to load universities";
+          setError(message);
+          console.error("Failed to fetch universities:", e);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -69,7 +69,10 @@ export async function fetchScholarships(params: {
   const url = new URL(`${API_BASE}/api/scholarships`);
 
   Object.entries(params).forEach(([k, v]) => {
-    if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, String(v));
+    // Don't send "All" values or empty strings to the API
+    if (v !== undefined && v !== null && v !== "" && String(v).toLowerCase() !== "all") {
+      url.searchParams.set(k, String(v));
+    }
   });
 
   const res = await fetch(url.toString());

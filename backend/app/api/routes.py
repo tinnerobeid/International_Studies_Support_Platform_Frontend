@@ -94,7 +94,13 @@ def list_scholarships(
         query = query.filter(Scholarship.name.ilike(s))
 
     if provider and provider.lower() != "all":
-        query = query.filter(Scholarship.provider.ilike(provider.strip()))
+        # Frontend sends "Government", "University", "Foundation" which map to provider_type
+        provider_val = provider.strip()
+        if provider_val.lower() in ["government", "university", "foundation"]:
+            query = query.filter(Scholarship.provider_type.ilike(provider_val))
+        else:
+            # Fallback to provider field for other values
+            query = query.filter(Scholarship.provider.ilike(provider_val))
 
     if level and level.lower() != "all":
         query = query.filter(Scholarship.level.ilike(level.strip()))
@@ -109,11 +115,25 @@ def list_scholarships(
     if sort == "az":
         query = query.order_by(Scholarship.name.asc())
     elif sort == "stipendHigh":
-        query = query.order_by(Scholarship.stipend.desc())
+        # Highest monthly stipend first
+        query = query.order_by(Scholarship.stipend.desc().nullslast())
+    elif sort == "deadline":
+        # Earliest deadline first; stored as string like YYYY-MM-DD, so lexicographic sort works
+        query = query.order_by(Scholarship.deadline.asc().nullsLast())
     else:
-        query = query.order_by(Scholarship.popular_score.desc())
+        # Default: most popular first (handle NULL popular_score)
+        query = query.order_by(Scholarship.popular_score.desc().nullslast())
 
+    # Count total matching records
     total = query.count()
+    
+    # Debug: log counts when no filters applied
+    if not any([q, provider, level, coverage, eligibility]):
+        total_all = db.query(Scholarship).count()
+        print(f"🔍 Debug: Total scholarships in DB: {total_all}, Query count: {total}")
+        if total != total_all:
+            print(f"⚠️ Warning: Count mismatch! Check for NULL values or data issues.")
+    
     offset = (page - 1) * page_size
     results = query.offset(offset).limit(page_size).all()
 
