@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../lib/appstore";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,8 +8,20 @@ const Login = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // TODO: call login API
-    console.log("Login:", { email, password });
+
+    // Mock Logic: Check email string to decide role
+    let role: "student" | "university" = "student";
+    if (email.includes("admin") || email.includes("uni") || email.includes("korea")) {
+      role = "university";
+    }
+
+    login(email, role);
+
+    if (role === "university") {
+      window.location.href = "/admin/dashboard";
+    } else {
+      window.location.href = "/profile";
+    }
   };
 
   return (

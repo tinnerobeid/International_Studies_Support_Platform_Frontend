@@ -1,5 +1,22 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
+export interface Program {
+  id: number;
+  name: string;
+  university_id: number;
+  universityName?: string;
+}
+
+export async function fetchPrograms(universityId?: string): Promise<Program[]> {
+  let url = `${API_BASE_URL}/api/admin/programs`;
+  if (universityId) {
+    url += `?university_id=${universityId}`;
+  }
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch programs");
+  return response.json();
+}
+
 export interface Institution {
   id: number;
   name: string;
@@ -20,7 +37,7 @@ export async function fetchInstitutions(params?: {
   page_size?: number;
 }): Promise<Institution[]> {
   const searchParams = new URLSearchParams();
-  
+
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
@@ -37,5 +54,6 @@ export async function fetchInstitutions(params?: {
     throw new Error(`API error: ${response.statusText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data.results;
 }

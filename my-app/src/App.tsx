@@ -18,6 +18,9 @@ import AdminApplicationsListPage from "./pages/adminapplicationlist";
 import AdminApplicationDetailPage from "./pages/adminapplicationdetails";
 
 import NotificationsPage from "./pages/notifications";
+import AdminDashboardPage from "./pages/admindashboard";
+import RequireRole from "./components/RequireRole";
+
 
 
 
@@ -30,7 +33,7 @@ const router = createBrowserRouter([
   { path: "/signup", element: <Signup /> },
   { path: "/admin/programs", element: <AdminProgramsListPage /> },
   { path: "/admin/programs/create", element: <AdminProgramCreatePage /> },
-  { path: "/profile", element: <StudentProfilePage /> },
+
   { path: "/universities/:id", element: <UniversityProfilePage /> },
   { path: "/admin/programs/new", element: <AdminProgramCreatePage /> },
   { path: "/scholarships/:id", element: <ScholarshipPageProfile /> },
@@ -41,6 +44,24 @@ const router = createBrowserRouter([
   { path: "/admin/applications", element: <AdminApplicationsListPage /> },
   { path: "/admin/applications/:id", element: <AdminApplicationDetailPage /> },
   { path: "/notifications", element: <NotificationsPage /> },
+
+  {
+    path: "/profile", element: (
+      <RequireRole allow={["student"]}>
+        <StudentProfilePage />
+      </RequireRole>
+    )
+  },
+
+  {
+    path: "/admin/dashboard", element: (
+      <RequireRole allow={["university"]}>
+        <AdminDashboardPage />
+      </RequireRole>
+    )
+  },
+
+
 
   {
     path: "*",

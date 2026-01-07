@@ -32,6 +32,37 @@ type Notification = {
 
 const KEY_APPS = "kstudy_apps_v1";
 const KEY_NOTIFS = "kstudy_notifs_v1";
+const KEY_USER = "kstudy_user_v1";
+
+export type UserRole = "student" | "university" | "admin";
+
+export type User = {
+  id: string;
+  email: string;
+  role: UserRole;
+  name: string;
+};
+
+export function getCurrentUser(): User | null {
+  const raw = localStorage.getItem(KEY_USER);
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+export function login(email: string, role: UserRole) {
+  const user: User = {
+    id: "u_" + Date.now(),
+    email,
+    role,
+    name: email.split("@")[0] || "User",
+  };
+  localStorage.setItem(KEY_USER, JSON.stringify(user));
+  return user;
+}
+
+export function logout() {
+  localStorage.removeItem(KEY_USER);
+}
 
 function nowISO() {
   return new Date().toISOString();

@@ -16,6 +16,7 @@ from app.schemas.program import ProgramOut, ProgramCreate
 from app.models.application import Application
 from app.schemas.application import ApplicationCreate, ApplicationOut
 
+
 router = APIRouter(tags=["institutions"])
 
 
@@ -187,10 +188,12 @@ def get_institution(id: int, db: Session = Depends(get_db)):
     return inst
 
 @router.get("/admin/programs", response_model=List[ProgramOut])
-def list_programs(q: Optional[str] = None, db: Session = Depends(get_db)):
+def list_programs(q: Optional[str] = None, university_id: Optional[int] = None, db: Session = Depends(get_db)):
     query = db.query(Program).options(joinedload(Program.institution))
     if q:
         query = query.filter(Program.name.ilike(f"%{q}%"))
+    if university_id:
+        query = query.filter(Program.university_id == university_id)
     
     programs = query.all()
     # Map to schema, explicitly setting university_name from the relationship
