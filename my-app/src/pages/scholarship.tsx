@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchScholarships, type Scholarship } from "../lib/api";
-import "./scholarship.css";
+import "./styles/scholarship.css";
 
 function formatKRW(n?: number | null) {
   if (!n) return "—";

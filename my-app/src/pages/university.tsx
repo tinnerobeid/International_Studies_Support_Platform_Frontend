@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchInstitutions} from "../lib/api";
 import InstitutionCard from "../components/InstitutionCard";
 import type { Institution } from "../types/institution";
-import "./university.css";
+import "./styles/university.css";
 
 function formatKRW(n?: number) {
   if (!n) return "—";

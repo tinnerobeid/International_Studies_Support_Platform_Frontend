@@ -1,5 +1,6 @@
 # app/models/institution.py
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from app.core.db import Base
 
 class Institution(Base):
@@ -21,3 +22,5 @@ class Institution(Base):
     popular_score = Column(Integer, default=50)
     tuition_min = Column(Integer, default=3000000)
     tuition_max = Column(Integer, default=5000000)
+
+    programs = relationship("Program", back_populates="institution")
