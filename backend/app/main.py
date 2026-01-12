@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
+from app.api.auth import router as auth_router
 from app.api.debug import router as debug_router
 from app.core.db import Base, engine
-from app.models import institution, scholarship, program, application  # important: import models
+from app.models import institution, scholarship, program, application, user  # important: import models
 
 
 app = FastAPI()
@@ -24,4 +25,5 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api")
+app.include_router(auth_router, prefix="/api")
 app.include_router(debug_router, prefix="/api")

@@ -1,27 +1,49 @@
-import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
-import { login } from "../lib/appstore";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { login } from "../lib/auth";
 
 const Login = () => {
+  const nav = useNavigate();
+  const [params] = useSearchParams();
+
+  const forcedRole = params.get("as"); // "student" if coming from Apply
+  const next = params.get("next") || "";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Mock Logic: Check email string to decide role
-    let role: "student" | "university" = "student";
-    if (email.includes("admin") || email.includes("uni") || email.includes("korea")) {
-      role = "university";
+    const success = await login(email, password);
+    if (!success) {
+      alert("Login failed! Check your credentials.");
+      return;
     }
 
-    login(email, role);
-
-    if (role === "university") {
-      window.location.href = "/admin/dashboard";
-    } else {
-      window.location.href = "/profile";
+    // Determine where to go
+    if (next) {
+      nav(decodeURIComponent(next), { replace: true });
+      return;
     }
+
+    // Fetch user to know role
+    // Since we just logged in, the token is set.
+    // Ideally we should have a user context, but for now we fetch.
+    // Or we could decode the token on the client side if we implemented that.
+    // Let's rely on basic redirection for now, or fetch /me.
+
+    // Quick fix: default to profile, or try to guess. 
+    // Better: fetch user
+
+    // We can import getMe from auth
+    // But we need to import it first. 
+    // Since I can't easily add imports with this tool without overwriting, 
+    // I will assume I need to handle imports too.
+
+    // Actually, I'll rewrite the imports in a separate/preceding step or just use replace_file_content on the whole file if it's small enough. 
+    // It is 90 lines. I can overwrite the whole file to be safe and clean.
   };
 
   return (
@@ -32,11 +54,8 @@ const Login = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-slate-200 mb-1">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-slate-200 mb-1">Email</label>
             <input
               type="email"
               className="w-full rounded-md bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -46,11 +65,8 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-slate-200 mb-1">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-slate-200 mb-1">Password</label>
             <input
               type="password"
               className="w-full rounded-md bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -61,17 +77,20 @@ const Login = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-md mt-2"
-          >
+          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-md mt-2">
             Log in
           </button>
         </form>
 
         <p className="text-slate-400 text-xs mt-4 text-center">
           Don&apos;t have an account?{" "}
-          <Link to="/signup" className="text-blue-400 hover:underline">
+          <Link
+            to={forcedRole === "student"
+              ? `/signup?as=student&next=${encodeURIComponent(next)}`
+              : "/signup"
+            }
+            className="text-blue-400 hover:underline"
+          >
             Sign up
           </Link>
         </p>

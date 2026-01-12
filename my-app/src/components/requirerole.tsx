@@ -1,32 +1,29 @@
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { UserRole, getCurrentUser } from "../lib/appstore";
+import { Navigate, useLocation } from "react-router-dom";
+import { getRole, type Role } from "../lib/auth";
 
-type Props = {
-  children: ReactNode;
-  allow: UserRole[];
-};
+export default function RequireRole({
+  allow,
+  children,
+}: {
+  allow: Role[];
+  children: React.ReactNode;
+}) {
+  const role = getRole();
+  const location = useLocation();
 
-export default function RequireRole({ children, allow }: Props) {
-  const user = getCurrentUser();
-
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  // ✅ Not logged in -> send to login with student default + next
+  if (!role) {
+    const next = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?as=student&next=${next}`} replace />;
   }
 
-  if (!allow.includes(user.role)) {
+  // ✅ Wrong role -> send them somewhere safe
+  if (!allow.includes(role)) {
     return (
-      <div style={{ padding: 40, textAlign: "center" }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Access Denied</h1>
-        <p>You are logged in as <strong>{user.role}</strong>.</p>
-        <p>This page requires one of: {allow.join(", ")}.</p>
-        <button
-          onClick={() => { localStorage.clear(); window.location.reload(); }}
-          style={{ marginTop: 20, padding: "8px 16px", cursor: "pointer" }}
-        >
-          Logout
-        </button>
-      </div>
+      <Navigate
+        to={role === "university" ? "/admin/dashboard" : "/profile"}
+        replace
+      />
     );
   }
 

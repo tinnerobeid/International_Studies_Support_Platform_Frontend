@@ -1,180 +1,166 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import "./styles/profile.css";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getSession, isLoggedIn } from "../lib/auth";
+import {
+  getApplyTargetForScholarship,
+  requireStudentLoginUrl,
+} from "../lib/applyGuard";
 
-export default function StudentProfilePage() {
-  const [tab, setTab] = useState<"overview" | "saved" | "tracker" | "documents">("overview");
+const mockScholarships: Record<string, any> = {
+  "1": {
+    id: "1",
+    title: "GKS Scholarship",
+    provider: "Korean Government",
+    fundingType: "Full",
+    deadline: "2026-03-31",
+    degreeLevels: ["Bachelors", "Masters", "PhD"],
+    coverage: ["Full tuition", "Monthly stipend", "Health insurance", "Flight support (varies)"],
+    eligibility: ["International students", "Strong academic record", "Meets country quota requirements"],
+    documentsRequired: ["Passport", "Transcript", "SOP", "Recommendation letters", "Medical form"],
+    timeline: ["Applications open: Feb", "Deadline: Mar 31", "Interviews: Apr", "Results: May/Jun"],
+    howToApply: ["Check embassy/university track", "Prepare documents", "Submit before deadline", "Wait for screening results"],
+    applicationLink: "https://www.studyinkorea.go.kr/",
+    description: "Government-funded scholarship for international students to study in Korea.",
+  },
+  "2": {
+    id: "2",
+    title: "KDU International Scholarship",
+    provider: "Kyungdong University",
+    fundingType: "Partial",
+    deadline: "2026-04-15",
+    degreeLevels: ["Bachelors"],
+    coverage: ["Partial tuition reduction"],
+    eligibility: ["International applicants", "Minimum GPA requirement"],
+    documentsRequired: ["Passport", "Transcript", "SOP"],
+    timeline: ["Apply with admission", "Scholarship decision after review"],
+    howToApply: ["Apply to KDU", "Select scholarship option", "Submit required docs"],
+    applicationLink: "https://www.kduniv.ac.kr/",
+    description: "University scholarship supporting international students at KDU.",
+  },
+};
 
-  // ✅ Mock data (replace later)
-  const student = {
-    fullName: "Christina Obeid",
-    email: "christina@example.com",
-    nationality: "Tanzania",
-    currentCountry: "South Korea",
-    targetDegree: "Bachelors",
-    targetIntake: "Fall 2026",
-    bio: "I’m exploring Korean universities and scholarships in Computer Science.",
-  };
+export default function ScholarshipProfilePage() {
+  const nav = useNavigate();
+  const { id } = useParams();
+  const s = (id && mockScholarships[id]) || null;
 
-  const savedUniversities = [
-    { id: "1", title: "Kyungdong University (KDU)", subtitle: "Gangwon-do, Korea", href: "/universities/1" },
-    { id: "2", title: "Korea University", subtitle: "Seoul, Korea", href: "/universities/2" },
-  ];
+  if (!s) {
+    return (
+      <div className="mx-auto max-w-4xl p-4">
+        <Link to="/scholarships" className="text-sm text-gray-600 hover:underline">← Back</Link>
+        <div className="mt-4 rounded-2xl border bg-white p-5 shadow-sm">
+          <h1 className="text-xl font-bold">Scholarship not found</h1>
+          <p className="text-sm text-gray-600">Try /scholarships/1 or /scholarships/2</p>
+        </div>
+      </div>
+    );
+  }
 
-  const savedScholarships = [
-    { id: "1", title: "GKS Scholarship", subtitle: "Deadline: Mar 31, 2026", href: "/scholarships/1" },
-    { id: "2", title: "KDU International Scholarship", subtitle: "Deadline: Apr 15, 2026", href: "/scholarships/2" },
-  ];
+  const applyTarget = getApplyTargetForScholarship(String(s.id));
 
-  const tracker = [
-    { id: "t1", title: "GKS Scholarship", type: "Scholarship", status: "Draft", deadline: "2026-03-31" },
-    { id: "t2", title: "Kyungdong University", type: "University", status: "Submitted", deadline: "2026-04-10" },
-  ];
+  function handleApply() {
+    // Not logged in -> force student login
+    if (!isLoggedIn()) {
+      nav(requireStudentLoginUrl(applyTarget));
+      return;
+    }
+
+    // Logged in but wrong role -> block
+    const role = getSession()?.role;
+    if (role !== "student") {
+      alert("Only students can apply. University accounts are created by admin.");
+      return;
+    }
+
+    // Student -> go to application create flow
+    nav(applyTarget);
+  }
 
   return (
     <div className="mx-auto max-w-6xl p-4">
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">My Profile</h1>
-          <p className="text-sm text-gray-600">Your dashboard for studying in Korea.</p>
+      <Link to="/scholarships" className="text-sm text-gray-600 hover:underline">← Back to Scholarships</Link>
+
+      <div className="mt-3 rounded-2xl border bg-white p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold">{s.title}</h1>
+            <p className="text-sm text-gray-600">{s.provider}</p>
+          </div>
+
+          <div className="flex gap-2">
+            <button className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" type="button">
+              Save Scholarship
+            </button>
+            <button
+              className="rounded-xl bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-500"
+              type="button"
+              onClick={handleApply}
+            >
+              Apply
+            </button>
+
+            {/* Optional: keep external link as “Official site” */}
+            {s.applicationLink && (
+              <a
+                className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50"
+                href={s.applicationLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Official Site ↗
+              </a>
+            )}
+          </div>
         </div>
-        <button className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" type="button">
-          Edit Profile
-        </button>
+
+        <div className="mt-4 flex flex-wrap gap-2 text-sm">
+          <span className="rounded-full border px-3 py-1">{s.fundingType}</span>
+          <span className="rounded-full border px-3 py-1">Deadline: {new Date(s.deadline).toLocaleDateString()}</span>
+          <span className="rounded-full border px-3 py-1">{s.degreeLevels.join(", ")}</span>
+        </div>
+
+        <div className="mt-5">
+          <h2 className="font-semibold">Description</h2>
+          <p className="mt-1 text-sm text-gray-700">{s.description}</p>
+        </div>
       </div>
 
-      {/* Profile card */}
-      <div className="mt-5 rounded-2xl border bg-white p-5 shadow-sm">
-        <p className="text-xl font-semibold">{student.fullName}</p>
-        <p className="text-sm text-gray-600">{student.email}</p>
-
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Info label="Nationality" value={student.nationality} />
-          <Info label="Current Country" value={student.currentCountry} />
-          <Info label="Target Degree" value={student.targetDegree} />
-          <Info label="Target Intake" value={student.targetIntake} />
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div className="lg:col-span-7 space-y-4">
+          <Section title="Coverage" items={s.coverage} />
+          <Section title="Eligibility" items={s.eligibility} />
+          <Section title="Required Documents" items={s.documentsRequired} />
         </div>
 
-        <div className="mt-4">
-          <p className="text-sm font-medium">Bio</p>
-          <p className="mt-1 text-sm text-gray-700">{student.bio}</p>
+        <div className="lg:col-span-5 space-y-4">
+          <Section title="Timeline" items={s.timeline} />
+          <Section title="How to Apply" items={s.howToApply} />
+
+          <div className="rounded-2xl border bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-semibold">Actions</h2>
+            <div className="mt-3 flex flex-col gap-2">
+              <button className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" type="button">
+                Add to Tracker
+              </button>
+              <button className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" type="button">
+                Mark Documents Complete
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="mt-6 flex flex-wrap gap-2">
-        <Tab active={tab === "overview"} onClick={() => setTab("overview")}>Overview</Tab>
-        <Tab active={tab === "saved"} onClick={() => setTab("saved")}>Saved</Tab>
-        <Tab active={tab === "tracker"} onClick={() => setTab("tracker")}>Tracker</Tab>
-        <Tab active={tab === "documents"} onClick={() => setTab("documents")}>Documents</Tab>
-      </div>
-
-      {/* Content */}
-      <div className="mt-4">
-        {tab === "overview" && (
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <Stat title="Saved Universities" value={String(savedUniversities.length)} />
-              <Stat title="Saved Scholarships" value={String(savedScholarships.length)} />
-              <Stat title="Tracked Items" value={String(tracker.length)} />
-            </div>
-          </div>
-        )}
-
-        {tab === "saved" && (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <SavedPanel title="Saved Universities" items={savedUniversities} emptyText="No saved universities yet." />
-            <SavedPanel title="Saved Scholarships" items={savedScholarships} emptyText="No saved scholarships yet." />
-          </div>
-        )}
-
-        {tab === "tracker" && (
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-semibold">Application Tracker</h2>
-            <div className="mt-4 space-y-2">
-              {tracker.map((t) => (
-                <div key={t.id} className="rounded-xl border p-4">
-                  <p className="font-semibold">{t.title}</p>
-                  <p className="text-sm text-gray-600">{t.type} • {t.status}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Deadline: {new Date(t.deadline).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {tab === "documents" && (
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-semibold">Documents</h2>
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {["Passport", "Transcript", "SOP", "Recommendation Letters", "CV", "TOPIK/IELTS/TOEFL"].map((x) => (
-                <div key={x} className="rounded-xl border p-4">
-                  <p className="font-semibold">{x}</p>
-                  <p className="mt-1 text-sm text-gray-600">Upload later</p>
-                  <button className="mt-3 rounded-xl border px-3 py-1 text-sm hover:bg-gray-50" type="button">
-                    Upload
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
 }
 
-function Info({ label, value }: { label: string; value?: string }) {
-  return (
-    <div className="rounded-xl border p-3">
-      <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-sm font-medium">{value || "—"}</p>
-    </div>
-  );
-}
-
-function Tab({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm hover:bg-gray-50 ${active ? "font-semibold" : ""}`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Stat({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-xl border p-4">
-      <p className="text-xs text-gray-500">{title}</p>
-      <p className="mt-1 text-2xl font-bold">{value}</p>
-    </div>
-  );
-}
-
-function SavedPanel({
-  title,
-  items,
-  emptyText,
-}: {
-  title: string;
-  items: { id: string; title: string; subtitle?: string; href: string }[];
-  emptyText: string;
-}) {
+function Section({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="rounded-2xl border bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold">{title}</h2>
-      <div className="mt-4 space-y-2">
-        {items.map((it) => (
-          <Link key={it.id} to={it.href} className="block rounded-xl border p-4 hover:bg-gray-50">
-            <p className="font-semibold">{it.title}</p>
-            {it.subtitle && <p className="text-sm text-gray-600">{it.subtitle}</p>}
-          </Link>
+      <div className="mt-3 space-y-2">
+        {items.map((x, i) => (
+          <div key={i} className="rounded-xl border p-3 text-sm text-gray-700">{x}</div>
         ))}
-        {items.length === 0 && <p className="text-sm text-gray-600">{emptyText}</p>}
       </div>
     </div>
   );

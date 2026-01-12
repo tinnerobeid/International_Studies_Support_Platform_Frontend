@@ -1,15 +1,32 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { signup } from "../lib/auth";
+
+
+
 
 const Signup = () => {
+  const nav = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [params] = useSearchParams();
+  // const next = params.get("next") || ""; // Not used currently
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // TODO: call signup API
-    console.log("Signup:", { fullName, email, password });
+    const success = await signup(email, password, fullName, "student");
+
+    if (success) {
+      alert("Account created! Please log in.");
+      nav("/login");
+    } else {
+      alert("Signup failed. Email usage?");
+    }
   };
 
   return (

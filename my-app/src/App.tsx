@@ -1,15 +1,19 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+
 import Landing from "./pages/landing";
 import Universities from "./pages/university";
 import Scholarships from "./pages/scholarship";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+
 import AdminProgramsListPage from "./pages/adminprogramlist";
 import AdminProgramCreatePage from "./pages/adminprogramcreatepage";
+
 import StudentProfilePage from "./pages/studentpageprofile";
 import UniversityProfilePage from "./pages/universityprofilepage";
 import ScholarshipPageProfile from "./pages/scholarshipprofile";
+
 import ApplicationsListPage from "./pages/applicationlist";
 import ApplicationCreatePage from "./pages/applicationcreate";
 import ApplicationDetailPage from "./pages/applicationdetails";
@@ -19,58 +23,150 @@ import AdminApplicationDetailPage from "./pages/adminapplicationdetails";
 
 import NotificationsPage from "./pages/notifications";
 import AdminDashboardPage from "./pages/admindashboard";
-import RequireRole from "./components/RequireRole";
 
+import RequireRole from "./components/requirerole";
+import AppNav from "./components/appnav";
 
-
+function Layout() {
+  return (
+    <>
+      <AppNav />
+      <Outlet />
+    </>
+  );
+}
 
 const router = createBrowserRouter([
-  { path: "/", element: <Landing /> },
-  { path: "/universities", element: <Universities /> },
-  { path: "/scholarships", element: <Scholarships /> },
-  { path: "/dashboard", element: <Dashboard /> },
-  { path: "/login", element: <Login /> },
-  { path: "/signup", element: <Signup /> },
-  { path: "/admin/programs", element: <AdminProgramsListPage /> },
-  { path: "/admin/programs/create", element: <AdminProgramCreatePage /> },
-
-  { path: "/universities/:id", element: <UniversityProfilePage /> },
-  { path: "/admin/programs/new", element: <AdminProgramCreatePage /> },
-  { path: "/scholarships/:id", element: <ScholarshipPageProfile /> },
-  { path: "/applications", element: <ApplicationsListPage /> },
-  { path: "/applications/new", element: <ApplicationCreatePage /> },
-  { path: "/applications/:id", element: <ApplicationDetailPage /> },
-
-  { path: "/admin/applications", element: <AdminApplicationsListPage /> },
-  { path: "/admin/applications/:id", element: <AdminApplicationDetailPage /> },
-  { path: "/notifications", element: <NotificationsPage /> },
-
   {
-    path: "/profile", element: (
-      <RequireRole allow={["student"]}>
-        <StudentProfilePage />
-      </RequireRole>
-    )
-  },
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Landing /> },
 
-  {
-    path: "/admin/dashboard", element: (
-      <RequireRole allow={["university"]}>
-        <AdminDashboardPage />
-      </RequireRole>
-    )
-  },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup /> },
+
+      { path: "/universities", element: <Universities /> },
+      { path: "/universities/:id", element: <UniversityProfilePage /> },
+
+      { path: "/scholarships", element: <Scholarships /> },
+      { path: "/scholarships/:id", element: <ScholarshipPageProfile /> },
+
+      {
+        path: "/applications",
+        element: (
+          <RequireRole allow={["student"]}>
+            <ApplicationsListPage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/applications/new",
+        element: (
+          <RequireRole allow={["student"]}>
+            <ApplicationCreatePage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/applications/:id",
+        element: (
+          <RequireRole allow={["student"]}>
+            <ApplicationDetailPage />
+          </RequireRole>
+        ),
+      },
+
+      // 🔒 Account (Student)
+      {
+        path: "/profile",
+        element: (
+          <RequireRole allow={["student"]}>
+            <StudentProfilePage />
+          </RequireRole>
+        ),
+      },
 
 
+      {
+        path: "/notifications",
+        element: (
+          <RequireRole allow={["student", "university"]}>
+            <NotificationsPage />
+          </RequireRole>
+        ),
+      },
 
-  {
-    path: "*",
-    element: (
-      <div style={{ padding: 24 }}>
-        <h1>404</h1>
-        <p>Page not found.</p>
-      </div>
-    ),
+      // 🔒 University/Admin-only
+      {
+        path: "/admin/dashboard",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminDashboardPage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/admin/programs",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminProgramsListPage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/admin/programs/create",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminProgramCreatePage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/admin/programs/new",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminProgramCreatePage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/admin/applications",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminApplicationsListPage />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/admin/applications/:id",
+        element: (
+          <RequireRole allow={["university"]}>
+            <AdminApplicationDetailPage />
+          </RequireRole>
+        ),
+      },
+
+      // Optional: If dashboard should be public, remove RequireRole wrapper
+      {
+        path: "/dashboard",
+        element: (
+          <RequireRole allow={["student"]}>
+            <Dashboard />
+          </RequireRole>
+        ),
+      },
+
+      // 404
+      {
+        path: "*",
+        element: (
+          <div style={{ padding: 24 }}>
+            <h1>404</h1>
+            <p>Page not found.</p>
+          </div>
+        ),
+      },
+    ],
   },
 ]);
 

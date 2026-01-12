@@ -218,18 +218,7 @@ def create_program(param: ProgramCreate, db: Session = Depends(get_db)):
     db.refresh(db_program)
     return db_program
 
-@router.get("/me")
-def get_me():
-    return {
-        "id": "user-123",
-        "fullName": "Test Student",
-        "email": "student@example.com",
-        "nationality": "Tanzanian",
-        "currentCountry": "South Korea",
-        "targetDegree": "Undergraduate",
-        "targetIntake": "Fall 2025",
-        "bio": "Interested in Computer Science and AI."
-    }
+
 
 
 # ==========================
