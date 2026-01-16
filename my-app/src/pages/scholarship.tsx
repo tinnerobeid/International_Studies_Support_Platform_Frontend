@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchScholarships, type Scholarship } from "../lib/api";
+import { getSession } from "../lib/auth";
 import "./styles/scholarship.css";
 
 function formatKRW(n?: number | null) {
@@ -10,6 +12,9 @@ function formatKRW(n?: number | null) {
 type SortKey = "popular" | "az" | "deadline" | "stipendHigh";
 
 export default function Scholarships() {
+  const navigate = useNavigate();
+  const session = getSession();
+
   const [q, setQ] = useState("");
   const [provider, setProvider] = useState("All");
   const [level, setLevel] = useState("All");
@@ -76,6 +81,15 @@ export default function Scholarships() {
     };
   }, [q, provider, level, coverage, eligibility, sort, page]);
 
+  const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
+  };
+
   const totalPages = Math.max(1, Math.ceil(data.total / pageSize));
 
   // dropdowns (can be dynamic later)
@@ -93,7 +107,7 @@ export default function Scholarships() {
           <a href="/">Discover</a>
           <a href="/universities">Universities</a>
           <a href="/scholarships">Scholarships</a>
-          <a href="#">Applying</a>
+          <a href="#" onClick={handleApplyClick}>Applying</a>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import "./styles/profile.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { getSession } from "../lib/auth";
 
 const mockUniversities: Record<string, any> = {
   "1": {
@@ -33,7 +34,18 @@ const mockUniversities: Record<string, any> = {
 
 export default function UniversityProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const session = getSession();
   const u = (id && mockUniversities[id]) || null;
+
+  const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
+  };
 
   if (!u) {
     return (

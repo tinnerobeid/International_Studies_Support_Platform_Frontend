@@ -11,20 +11,15 @@ export default function RequireRole({
   const role = getRole();
   const location = useLocation();
 
-  // ✅ Not logged in -> send to login with student default + next
+  // Not logged in -> send to login with next
   if (!role) {
     const next = encodeURIComponent(location.pathname + location.search);
     return <Navigate to={`/login?as=student&next=${next}`} replace />;
   }
 
-  // ✅ Wrong role -> send them somewhere safe
+  // Wrong role -> redirect
   if (!allow.includes(role)) {
-    return (
-      <Navigate
-        to={role === "university" ? "/admin/dashboard" : "/profile"}
-        replace
-      />
-    );
+    return <Navigate to={role === "university" ? "/admin/dashboard" : "/profile"} replace />;
   }
 
   return <>{children}</>;

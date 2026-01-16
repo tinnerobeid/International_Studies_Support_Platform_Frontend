@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchInstitutions} from "../lib/api";
+import { useNavigate } from "react-router-dom";
+import { fetchInstitutions } from "../lib/api";
+import { getSession } from "../lib/auth";
 import InstitutionCard from "../components/InstitutionCard";
 import type { Institution } from "../types/institution";
 import "./styles/university.css";
@@ -12,6 +14,9 @@ function formatKRW(n?: number) {
 type SortKey = "popular" | "az" | "tuitionLow" | "tuitionHigh";
 
 export default function Universities() {
+  const navigate = useNavigate();
+  const session = getSession();
+
   const [q, setQ] = useState("");
   const [city, setCity] = useState("All");
   const [region, setRegion] = useState("All");
@@ -91,6 +96,15 @@ export default function Universities() {
     };
   }, [q, city, region, institutionType, level, sort, page]);
 
+  const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
+  };
+
   const totalPages = Math.max(1, Math.ceil(data.total / pageSize));
 
   return (
@@ -101,7 +115,7 @@ export default function Universities() {
         <div className="u-navlinks">
           <a href="/">Discover</a>
           <a href="/universities">Universities</a>
-          <a href="#">Applying</a>
+          <a href="#" onClick={handleApplyClick}>Applying</a>
           <a href="#">International</a>
         </div>
       </div>
@@ -255,11 +269,11 @@ export default function Universities() {
 
           <section className="cards">
             <div className="container cards-grid mt-6">
-            {!loading &&
-              !error &&
+              {!loading &&
+                !error &&
                 data.results.map((u) => (
-                <InstitutionCard key={u.id} institution={u as Institution} />
-              ))}
+                  <InstitutionCard key={u.id} institution={u as Institution} />
+                ))}
             </div>
           </section>
 

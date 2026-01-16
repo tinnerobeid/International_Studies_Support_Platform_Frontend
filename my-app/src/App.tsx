@@ -5,8 +5,7 @@ import Universities from "./pages/university";
 import Scholarships from "./pages/scholarship";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
-import Signup from "./pages/signup";
-
+import Register from "./pages/register";
 import AdminProgramsListPage from "./pages/adminprogramlist";
 import AdminProgramCreatePage from "./pages/adminprogramcreatepage";
 
@@ -25,25 +24,20 @@ import NotificationsPage from "./pages/notifications";
 import AdminDashboardPage from "./pages/admindashboard";
 
 import RequireRole from "./components/requirerole";
-import AppNav from "./components/appnav";
 
 function Layout() {
-  return (
-    <>
-      <AppNav />
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }
 
 const router = createBrowserRouter([
+  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
+  { path: "/", element: <Landing /> },
   {
     element: <Layout />,
     children: [
-      { path: "/", element: <Landing /> },
 
-      { path: "/login", element: <Login /> },
-      { path: "/signup", element: <Signup /> },
+
 
       { path: "/universities", element: <Universities /> },
       { path: "/universities/:id", element: <UniversityProfilePage /> },

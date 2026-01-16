@@ -1,5 +1,6 @@
 import "./styles/profile.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { getSession } from "../lib/auth";
 
 const mockScholarships: Record<string, any> = {
   "1": {
@@ -36,7 +37,18 @@ const mockScholarships: Record<string, any> = {
 
 export default function ScholarshipProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const session = getSession();
   const s = (id && mockScholarships[id]) || null;
+
+  const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
+  };
 
   if (!s) {
     return (
@@ -66,7 +78,7 @@ export default function ScholarshipProfilePage() {
               Save Scholarship
             </button>
             {s.applicationLink && (
-              <a className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" href={s.applicationLink} target="_blank" rel="noreferrer">
+              <a className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" href={s.applicationLink} onClick={handleApplyClick}>
                 Apply Now ↗
               </a>
             )}

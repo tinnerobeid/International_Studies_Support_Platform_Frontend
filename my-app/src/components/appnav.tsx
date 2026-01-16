@@ -12,7 +12,7 @@ export default function AppNav() {
   const handleApplyClick = (e: React.MouseEvent) => {
     if (!session) {
       e.preventDefault();
-      goLoginAsStudent("/applications/new");
+      goLoginAsStudent("/profile");
     }
   };
 
@@ -47,9 +47,9 @@ export default function AppNav() {
             Services
           </NavLink>
 
-          {/* ✅ Apply: if not logged in -> login */}
+          {/* ✅ Apply: if not logged in -> login -> profile */}
           <NavLink
-            to="/applications/new"
+            to="/profile"
             onClick={handleApplyClick}
             className={({ isActive }) => (isActive ? "font-semibold" : "")}
           >

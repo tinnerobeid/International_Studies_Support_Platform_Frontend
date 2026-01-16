@@ -1,3 +1,5 @@
+import { institutions, scholarships } from "../data/mockData";
+
 // Institution / university types and API function
 export type Institution = {
   id: number;
@@ -23,21 +25,28 @@ export type InstitutionsResponse = {
   results: Institution[];
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
-
 export async function fetchInstitutions(params: Record<string, any>) {
-  const qs = new URLSearchParams();
-  Object.entries(params).forEach(([k, v]) => {
-    if (v === undefined || v === null) return;
-    if (typeof v === "string" && v.trim() === "") return;
-    qs.set(k, String(v));
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Filter mock data based on params (simple implementation)
+  let results = institutions.filter(inst => {
+    if (params.q && !inst.name.toLowerCase().includes(params.q.toLowerCase())) return false;
+
+    if (params.region && params.region !== "All" && inst.region !== params.region) return false;
+    if (params.city && params.city !== "All" && inst.city !== params.city) return false;
+    if (params.institution_type && params.institution_type !== "All" && inst.institution_type !== params.institution_type) return false;
+    if (params.level && params.level !== "All" && inst.level !== params.level && inst.level !== "Both") return false;
+
+    return true;
   });
 
-  const url = `${API_BASE}/api/institutions?${qs.toString()}`;
-  const res = await fetch(url);
-
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  return await res.json();
+  return {
+    total: results.length,
+    page: params.page || 1,
+    page_size: params.page_size || 10,
+    results: results,
+  };
 }
 
 // Scholarship types and API function
@@ -65,18 +74,22 @@ export async function fetchScholarships(params: {
   page?: number;
   page_size?: number;
 }) {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
-  const url = new URL(`${API_BASE}/api/scholarships`);
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  Object.entries(params).forEach(([k, v]) => {
-    // Don't send "All" values or empty strings to the API
-    if (v !== undefined && v !== null && v !== "" && String(v).toLowerCase() !== "all") {
-      url.searchParams.set(k, String(v));
-    }
+  let results = scholarships.filter(sch => {
+    if (params.q && !sch.name.toLowerCase().includes(params.q.toLowerCase())) return false;
+    if (params.provider && params.provider !== "All" && !sch.provider.toLowerCase().includes(params.provider.toLowerCase())) return false;
+    if (params.level && params.level !== "All" && sch.level !== params.level && sch.level !== "Both") return false;
+    if (params.coverage && params.coverage !== "All" && sch.coverage !== params.coverage) return false;
+
+    return true;
   });
 
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json() as Promise<{ total: number; page: number; page_size: number; results: Scholarship[] }>;
+  return {
+    total: results.length,
+    page: params.page || 1,
+    page_size: params.page_size || 10,
+    results: results
+  } as { total: number; page: number; page_size: number; results: Scholarship[] };
 }
-

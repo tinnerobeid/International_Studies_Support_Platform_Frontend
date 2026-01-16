@@ -1,21 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { goApply } from "../lib/navHelpers";
+import { isLoggedIn, getRole } from "./auth";
 
-export default function UniversityProfilePage() {
-  const nav = useNavigate();
-  const { id } = useParams();
+export function goToLoginAsStudent(nextPath: string) {
+  return `/login?as=student&next=${encodeURIComponent(nextPath)}`;
+}
 
-  return (
-    <div>
-      {/* ... your profile UI ... */}
-
-      <button
-        onClick={() =>
-          goApply(nav, `/applications/new?type=university&universityId=${id}`)
-        }
-      >
-        Apply
-      </button>
-    </div>
-  );
+export function canStudentAccess(): boolean {
+  return isLoggedIn() && getRole() === "student";
 }

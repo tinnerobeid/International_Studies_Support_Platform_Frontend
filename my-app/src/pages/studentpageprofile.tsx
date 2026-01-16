@@ -1,10 +1,8 @@
 import "./styles/profile.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getSession, isLoggedIn } from "../lib/auth";
-import {
-  getApplyTargetForScholarship,
-  requireStudentLoginUrl,
-} from "../lib/applyGuard";
+import {getApplyTargetForScholarship, requireStudentLoginUrl } from "../lib/applyGuard";
+
 
 const mockScholarships: Record<string, any> = {
   "1": {

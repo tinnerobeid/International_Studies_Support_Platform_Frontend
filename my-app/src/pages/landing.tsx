@@ -1,14 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getSession } from "../lib/auth";
 
 const Landing: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  const session = getSession();
+
+  const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
+  };
 
   const handleApplySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: handle "Apply Now" submit
-    // e.g. call API, show message, etc.
-    console.log("Apply form submitted");
+    if (session) {
+      navigate("/profile");
+    } else {
+      navigate("/login?as=student&next=/profile");
+    }
   };
 
   const handleFooterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +66,7 @@ const Landing: React.FC = () => {
                 <a href="#services">Services</a>
               </li>
               <li>
-                <a href="#join">Apply</a>
+                <a href="#join" onClick={handleApplyClick}>Apply</a>
               </li>
               <li className="nav-user">
                 <Link to="/login" aria-label="Account">
@@ -75,7 +89,7 @@ const Landing: React.FC = () => {
               Discover universities, scholarships, and visa assistance all in
               one place.
             </p>
-            <a className="btn btn-outline" href="#join">
+            <a className="btn btn-outline" href="#join" onClick={handleApplyClick}>
               Apply Now
             </a>
           </div>
@@ -133,7 +147,7 @@ const Landing: React.FC = () => {
                 preparing necessary documents to ensuring students can apply
                 with clarity and confidence.
               </p>
-              <a href="#join" className="btn btn-outline">
+              <a href="#join" className="btn btn-outline" onClick={handleApplyClick}>
                 Join Us Now
               </a>
             </div>

@@ -1,27 +1,20 @@
 import { Link, type LinkProps, useNavigate } from "react-router-dom";
-import { isLoggedIn, getRole } from "../lib/auth";
+import { getRole, isLoggedIn, type Role } from "../lib/auth";
 
 type Props = LinkProps & {
-  require?: "student" | "university" | "any";
-  toWhenAuthed?: string; // optional override
+  require?: Role | "any";
 };
 
-export default function ProtectedLink({
-  require = "any",
-  to,
-  toWhenAuthed,
-  ...rest
-}: Props) {
+export default function ProtectedLink({ require = "any", to, ...rest }: Props) {
   const nav = useNavigate();
 
-  function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    const authed = isLoggedIn();
+  function onClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    const loggedIn = isLoggedIn();
     const role = getRole();
 
-    if (!authed) {
+    if (!loggedIn) {
       e.preventDefault();
       const next = encodeURIComponent(String(to));
-      // default student when coming from Apply/Account
       nav(`/login?as=student&next=${next}`);
       return;
     }
@@ -31,12 +24,7 @@ export default function ProtectedLink({
       nav(role === "university" ? "/admin/dashboard" : "/profile");
       return;
     }
-
-    if (toWhenAuthed) {
-      e.preventDefault();
-      nav(toWhenAuthed);
-    }
   }
 
-  return <Link to={to} {...rest} onClick={handleClick} />;
+  return <Link to={to} {...rest} onClick={onClick} />;
 }

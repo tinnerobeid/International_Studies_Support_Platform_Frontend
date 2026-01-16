@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { programs, institutions } from "../data/mockData";
 
 export interface Program {
   id: number;
@@ -8,13 +8,13 @@ export interface Program {
 }
 
 export async function fetchPrograms(universityId?: string): Promise<Program[]> {
-  let url = `${API_BASE_URL}/api/admin/programs`;
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   if (universityId) {
-    url += `?university_id=${universityId}`;
+    const uid = parseInt(universityId);
+    return programs.filter(p => p.university_id === uid);
   }
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("Failed to fetch programs");
-  return response.json();
+  return programs;
 }
 
 export interface Institution {
@@ -36,24 +36,16 @@ export async function fetchInstitutions(params?: {
   page?: number;
   page_size?: number;
 }): Promise<Institution[]> {
-  const searchParams = new URLSearchParams();
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        searchParams.append(key, String(value));
-      }
-    });
+  let results = institutions.map(i => ({
+    ...i,
+    // Ensure specific fields match what interface expects if needed
+  }));
+
+  if (params?.q) {
+    results = results.filter(i => i.name.toLowerCase().includes(params.q!.toLowerCase()));
   }
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/institutions?${searchParams.toString()}`
-  );
-
-  if (!response.ok) {
-    throw new Error(`API error: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.results;
+  return results;
 }
