@@ -1,0 +1,11 @@
+/* Reuse university layout classes so scholarships page matches */
+@import "./university.css";
+
+.s-page {
+  background: #0f1115;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+
+

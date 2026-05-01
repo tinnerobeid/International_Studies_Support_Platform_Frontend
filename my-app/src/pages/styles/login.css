@@ -1,0 +1,238 @@
+/* Cleaned up CSS to match the screenshot */
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+.login-page {
+  background: #111827;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  line-height: 1.6em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+}
+
+.form {
+  z-index: 15;
+  position: relative;
+  background: transparent;
+  width: 600px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin: 10px;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-card {
+  z-index: 15;
+  position: relative;
+  background: #FFFFFF;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  padding: 60px;
+}
+
+/* Remove unused toggle styles */
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 0 20px;
+}
+
+.form-group:last-child {
+  margin: 0;
+}
+
+.form-group label {
+  display: block;
+  margin: 0 0 10px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+}
+
+.form-group input {
+  outline: none;
+  display: block;
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 12px 20px;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  transition: 0.3s ease;
+}
+
+.form-group input:focus {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.form-group button {
+  outline: none;
+  background: #4285F4;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  padding: 12px 20px;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.form-group .form-remember {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.form-group .form-remember input[type='checkbox'] {
+  display: inline-block;
+  width: auto;
+  margin: 0 10px 0 0;
+}
+
+.form-group .form-recovery {
+  color: #4285F4;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.form-header {
+  margin: 0 0 40px;
+}
+
+.form-header h1 {
+  padding: 4px 0;
+  color: #4285F4;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.two .form-header h1 {
+  position: relative;
+  z-index: 40;
+  color: #FFFFFF;
+}
+
+.pen-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 600px;
+  margin: 20px auto 100px;
+}
+
+.pen-footer a {
+  color: #FFFFFF;
+  font-size: 12px;
+  text-decoration: none;
+  text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.pen-footer a .material-icons {
+  width: 12px;
+  margin: 0 5px;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.cp-fab {
+  background: #FFFFFF !important;
+  color: #4285F4 !important;
+}
+
+/* Form Toggle Animation */
+.form-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.form {
+  position: relative;
+  transition: height 0.3s ease-in-out;
+}
+
+.form-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.form-panel.hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+.form-panel.two {
+  transform: translateY(100%);
+}
+
+.form-panel.two.active {
+  transform: translateY(0);
+}
+
+/* Alternative slide animation */
+.form-slide-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.form-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.form-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.form-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 0.3s ease-in-out;
+}
