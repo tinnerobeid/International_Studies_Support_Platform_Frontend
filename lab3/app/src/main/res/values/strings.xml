@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">lab3</string>
+    <string name="app_name">LifecycleDemo</string>
+    <string name="title_student_form">Student Information Form</string>
+    <string name="hint_name">Enter Student Name</string>
+    <string name="hint_roll">Enter Roll Number</string>
+    <string name="btn_submit">Submit</string>
+    <string name="default_status">Status will appear here</string>
 </resources>

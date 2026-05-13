@@ -1,7 +1,9 @@
 package com.example.class2_secondactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SecondActivity extends AppCompatActivity {
@@ -13,6 +15,12 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
         Log.d(TAG, "onCreate called");
+
+        Button btnThird = findViewById(R.id.btnThird);
+        btnThird.setOnClickListener(v -> {
+            Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">firstApp</string>
+    <string name="full_name">Christina Obeid</string>
+    <string name="student_id">2317166</string>
+    <string name="department">BSC</string>
+    <string name="current_date_time">4 March 2026 - 11:00 PM</string>
 </resources>
