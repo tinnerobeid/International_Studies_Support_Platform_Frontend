@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kstudy</title>
+
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="./App.css" />
+
+    <!-- Font Awesome (optional, only if you use the icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/" aria-label="kstudy home">
+          <span>kstudy</span>
+        </a>
+
+        <button
+          class="hamburger"
+          id="hamburger"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          type="button"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="nav" id="site-nav" aria-label="Primary">
+          <ul>
+            <li><a href="#top">Home</a></li>
+            <li><a href="/universities">Universities</a></li>
+            <li><a href="/scholarships">Scholarships</a></li>
+            <li><a href="#services">Services</a></li>
+            <li>
+              <a href="#join" class="apply-link">Apply</a>
+            </li>
+            <li class="nav-user">
+              <a href="/login" aria-label="Account">
+                <i class="fa-solid fa-user"></i>
+                <span class="nav-user__label">Account</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <span class="hero-overlay" aria-hidden="true"></span>
+
+        <div class="container hero-content">
+          <h1>Explore Your Academic Future in Korea</h1>
+          <p>
+            Discover universities, scholarships, and visa assistance all in one
+            place.
+          </p>
+          <a class="btn btn-outline apply-link" href="#join">Apply Now</a>
+        </div>
+      </section>
+
+      <section class="cards">
+        <div class="container cards-grid">
+          <article class="card">
+            <h3>University Information</h3>
+            <p>
+              Explore comprehensive university information across Korea that
+              includes courses, program offerings, rankings, tuition fees,
+              admission requirements, and application timelines—all in one
+              place. Compare degrees and language tracks, check deadlines, and
+              follow official links so you can plan your next step with
+              confidence.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Scholarships</h3>
+            <p>
+              Government and university scholarships in Korea provide
+              international students with financial assistance and academic
+              support to pursue higher education. These scholarships generally
+              cover tuition fees, living expenses, and other essential costs,
+              allowing students to focus on their studies without financial
+              burden.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Visa Support</h3>
+            <p>
+              Students receive clear instructions on how to meet specific visa
+              requirements, avoid common mistakes, and ensure a smooth and
+              timely approval process. By offering reliable guidance tailored
+              to each country’s regulations, visa support helps students focus
+              on their academic journey with confidence and peace of mind.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about">
+        <div class="container about-grid">
+          <div class="about-text">
+            <h2>Your Study Abroad Companion</h2>
+            <p>
+              Kstudy serves as a bridge between students and educational
+              opportunities in Korea, offering an easier and more organized
+              way to find and apply to universities and scholarships. The
+              platform streamlines every stage of the application process,
+              from discovering programs and understanding requirements to
+              preparing necessary documents to ensuring students can apply
+              with clarity and confidence.
+            </p>
+            <a href="#join" class="btn btn-outline apply-link">Join Us Now</a>
+          </div>
+
+          <div class="about-image">
+            <img
+              src="/images/img1.png"
+              alt="Students studying in a modern Korean university"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="ally">
+        <div class="edu-container">
+          <div class="edu-media">
+            <img
+              src="/images/img2.jpeg"
+              alt="University campus"
+              class="edu-img back"
+            />
+            <img
+              src="/images/img3.jpeg"
+              alt="Advisor assisting a student"
+              class="edu-img front"
+            />
+          </div>
+
+          <div class="edu-copy">
+            <h2 class="edu-title">
+              Your Educational<br />
+              Ally
+            </h2>
+            <p class="edu-text">
+              Our platform provides a wide range of personalized resources
+              designed to support every step of your academic journey. From
+              detailed visa assistance to structured TOPIK preparation, we
+              ensure that students are fully equipped to meet both academic
+              and administrative requirements. Each service is carefully
+              tailored to individual needs, helping learners overcome
+              challenges, adapt to new environments, and confidently pursue
+              their studies in Korea with the right tools and guidance.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-dark" id="explore">
+        <div class="hero-content">
+          <h1 class="hero-title">Explore Your Future</h1>
+          <p class="hero-subtitle">
+            Discover universities and scholarships in Korea with Kstudy.
+          </p>
+        </div>
+      </section>
+
+      <section class="services" id="services">
+        <div class="container">
+          <div class="services-grid">
+            <article class="service-card">
+              <div class="service-media">
+                <img
+                  src="/images/uni.jpeg"
+                  alt="Students studying in a library"
+                />
+              </div>
+              <div class="service-body">
+                <h3>University Information</h3>
+                <p>
+                  Gain complete and reliable information about universities,
+                  programs, and application processes all in one convenient
+                  place to help you make informed decisions about your
+                  education.
+                </p>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-media">
+                <img
+                  src="/images/scholar.jpeg"
+                  alt="Scholarship application form"
+                />
+              </div>
+              <div class="service-body">
+                <h3>Scholarship Assistance</h3>
+                <p>
+                  Discover scholarships that align with your academic goals
+                  and study plans, offering financial support and opportunities
+                  that help you focus on achieving success throughout your
+                  educational journey.
+                </p>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-media">
+                <img src="/images/visa.jpeg" alt="Graduate adjusting cap" />
+              </div>
+              <div class="service-body">
+                <h3>Visa Support</h3>
+                <p>
+                  Receive expert guidance with your visa applications and
+                  pre-arrival preparations, ensuring a smooth transition into
+                  studying abroad with all the necessary documents and
+                  requirements ready on time.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-join" id="join">
+        <div class="container">
+          <h2 class="cta-join__title">Join Our Academic Community</h2>
+          <p class="cta-join__subtitle">
+            Explore Universities and Scholarships in Korea
+          </p>
+
+          <form id="applyForm" class="cta-join__form" novalidate>
+            <label for="joinEmail" class="cta-join__label">
+              Your Email Address
+            </label>
+            <input
+              type="email"
+              id="joinEmail"
+              name="email"
+              class="cta-join__input"
+              placeholder="Enter your email here"
+              required
+              inputmode="email"
+              autocomplete="email"
+              aria-describedby="joinHelp"
+            />
+            <small id="joinHelp" class="cta-join__help"></small>
+
+            <button type="submit" class="cta-join__btn">Apply Now</button>
+            <p class="cta-join__msg" id="joinMsg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="testimonial" id="testimonial">
+        <div class="testimonial-container">
+          <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
+          <p class="testimonial-text">
+            Kstudy made my university application process seamless and
+            stress-free. Their guidance on scholarships and visa applications
+            was invaluable. Highly recommend their services!
+          </p>
+          <div class="testimonial-author"></div>
+          <div class="testimonial-author">
+            <h4>Jane Doe</h4>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3 class="footer-title">Connect</h3>
+          <p class="footer-text">Discover universities and scholarships in Korea.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3 class="footer-title">Support</h3>
+          <p class="footer-text">+82-10-1234-5678</p>
+          <p class="footer-text">info@kstudyplatform.com</p>
+        </div>
+
+        <div class="footer-col">
+          <h3 class="footer-title">Community</h3>
+          <form class="footer-form" id="footerForm">
+            <label for="footer-email">Your Email Address</label>
+            <input
+              type="email"
+              id="footer-email"
+              placeholder="Enter your email here"
+              required
+            />
+            <button type="submit">Join the Kstudy Community</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> Kstudy. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // ---- Helpers (replace getSession() + react-router navigate) ----
+      function getSession() {
+        // Adjust this to match how you store auth in your project.
+        // Example: return localStorage.getItem("token");
+        const token = localStorage.getItem("token");
+        return token ? { token } : null;
+      }
+
+      function go(url) {
+        window.location.href = url;
+      }
+
+      function handleApplyAction(e) {
+        e.preventDefault();
+        const session = getSession();
+        if (session) go("/profile");
+        else go("/login?as=student&next=/profile");
+      }
+
+      // Apply link(s)
+      document.querySelectorAll(".apply-link").forEach((a) => {
+        a.addEventListener("click", handleApplyAction);
+      });
+
+      // Apply form
+      document.getElementById("applyForm")?.addEventListener("submit", handleApplyAction);
+
+      // Footer newsletter form
+      document.getElementById("footerForm")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log("Footer form submitted");
+      });
+
+      // Set year
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Optional: hamburger toggle (basic)
+      const hamburger = document.getElementById("hamburger");
+      const nav = document.getElementById("site-nav");
+      if (hamburger && nav) {
+        hamburger.addEventListener("click", () => {
+          const expanded = hamburger.getAttribute("aria-expanded") === "true";
+          hamburger.setAttribute("aria-expanded", String(!expanded));
+          nav.classList.toggle("is-open");
+        });
+      }
+    </script>
+  </body>
+</html>

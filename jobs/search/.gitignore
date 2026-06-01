@@ -1,0 +1,58 @@
+# ─── Python / Django ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.log
+
+# Virtual environment
+venv/
+env/
+.env
+.env.*
+*.env
+
+# Django
+*.sqlite3
+staticfiles/
+media/
+db.sqlite3
+
+# ─── Node / React Native / Expo ─────────────────────────────────────
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+*.tsbuildinfo
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Native build outputs
+/ios
+/android
+.kotlin/
+
+# ─── IDE & OS ────────────────────────────────────────────────────────
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+*.pem
+
+# ─── Secrets & keys (NEVER commit these) ───────────────────────────
+google-services.json
+google-play-service-account.json
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.keystore

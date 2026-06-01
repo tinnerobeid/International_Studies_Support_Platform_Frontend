@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">firstApp</string>
+    <string name="current_date_time">4 March 2026 - 11:00 PM</string>
+    <string name="department">BSC</string>
+    <string name="full_name">Christina Obeid</string>
+    <string name="student_id">2317166</string>
+    <style name="Base.Theme.FirstApp" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.FirstApp" parent="Base.Theme.FirstApp"/>
+</resources>

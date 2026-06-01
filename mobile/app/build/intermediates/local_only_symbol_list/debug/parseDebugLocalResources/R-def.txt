@@ -1,0 +1,23 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id main
+id tv_date_time
+id tv_department
+id tv_id
+id tv_name
+layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string current_date_time
+string department
+string full_name
+string student_id
+style Base.Theme.FirstApp
+style Theme.FirstApp
+xml backup_rules
+xml data_extraction_rules

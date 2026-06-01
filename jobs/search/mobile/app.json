@@ -1,0 +1,116 @@
+{
+  "expo": {
+    "name": "Search — Jobs in Tanzania",
+    "slug": "search-tz",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "search",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#059669",
+
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#059669"
+    },
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.searchtz.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Search needs access to your photos to upload a profile picture or CV.",
+        "NSCameraUsageDescription": "Search needs camera access to take a profile photo.",
+        "NSPhotoLibraryAddUsageDescription": "Search saves photos to your library."
+      }
+    },
+
+    "android": {
+      "package": "com.searchtz.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#059669",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#059669"
+      },
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.CAMERA",
+        "android.permission.VIBRATE"
+      ],
+      "blockedPermissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
+      ],
+      "allowBackup": false,
+      "predictiveBackGestureEnabled": false,
+      "edgeToEdgeLayoutEnabled": true,
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
+      }
+    },
+
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+
+    "plugins": [
+      "expo-router",
+      [
+        "react-native-maps",
+        {
+          "googleMapsApiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#059669"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Search needs access to your photos to upload a profile picture.",
+          "cameraPermission": "Search needs camera access to take a profile photo."
+        }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
+
+    "experiments": {
+      "typedRoutes": true
+    },
+
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

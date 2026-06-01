@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart UI App</string>
+    <string name="student_name">Christina Obeid</string>
+    <string name="student_id">2317166</string>
+    <string name="profile_button">Show Profile</string>
+    <string name="active_student">Active Student</string>
+    <string name="check_status">Check Status</string>
+    <string name="status_active">Status: Active</string>
+    <string name="status_inactive">Status: Inactive</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="contact_no">Contact No</string>
+    <string name="toast_message">Name: %1$s, ID: %2$s</string>
+    <string name="result_activity_title">Result Activity</string>
+    <string name="subject_header">Subject</string>
+    <string name="marks_header">Marks</string>
+    <string name="math_subject">Math</string>
+    <string name="math_marks">85</string>
+    <string name="comp_subject">Computer</string>
+    <string name="comp_marks">95</string>
+</resources>
